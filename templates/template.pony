@@ -91,6 +91,10 @@ class TemplateValues
     _parent = None
     _values = Map[String, TemplateValue]
 
+  new with_values(values: Map[String, TemplateValue]) =>
+    _parent = None
+    _values = values
+
   fun box apply(name: String): TemplateValue? =>
     try _values(name)?
     else
