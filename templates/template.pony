@@ -69,6 +69,11 @@ class box TemplateValue
     end
     _properties = properties
 
+  new box with_properties(properties: Map[String, TemplateValue] box) =>
+    _value = ""
+    _values = []
+    _properties = properties
+
   fun apply(name: String): TemplateValue? => _properties(name)?
 
   fun string(): String? => _value as String
