@@ -171,9 +171,9 @@ class val Template
       | let prop: _PropNode => current_parts.push(prop)
       | let call: _CallNode =>
         current_parts.push(_Call(ctx.functions(call.name)?, call.arg))
-      | let if': _IfNode =>
+      | let ifv: _IfNode =>
         current_parts = Array[_Part]
-        open.push((if', current_parts))
+        open.push((ifv, current_parts))
       | let ifnotempty: _IfNotEmptyNode =>
         current_parts = Array[_Part]
         open.push((ifnotempty, current_parts))
@@ -205,8 +205,8 @@ class val Template
       end
 
     match stmt
-    | let if': _IfNode =>
-      next_current.push(_If(if'.value, body))
+    | let ifv: _IfNode =>
+      next_current.push(_If(ifv.value, body))
     | let ifnotempty: _IfNotEmptyNode =>
       next_current.push(_IfNotEmpty(ifnotempty.value, body))
     | let loop: _LoopNode =>
@@ -233,10 +233,10 @@ class val Template
         // XXX make this an error instead
         let substitution = try values._lookup(prop)?.string()? else "" end
         result = result + substitution
-      | let if': _If box =>
+      | let ifv: _If box =>
         try
-          values._lookup(if'.value)?
-          result = result + _render_parts(if'.body, values)?
+          values._lookup(ifv.value)?
+          result = result + _render_parts(ifv.body, values)?
         end
       | let ifnotempty: _IfNotEmpty box =>
         if values._lookup(ifnotempty.value)?.values().has_next() then

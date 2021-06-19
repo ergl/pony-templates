@@ -63,12 +63,12 @@ primitive _StmtParser
       expr() = call / prop
 
       let whitespace = (L(" ") / L("\t")).many1()
-      let end' = L("end").term(_TEnd)
+      let endv = L("end").term(_TEnd)
       let loop = (L("for") * name * L("in") * prop).node(_TLoop).hide(whitespace)
       let ifnotempty = (L("ifnotempty") * prop).node(_TIfNotEmpty).hide(whitespace)
-      let if' = (L("if") * prop).node(_TIf).hide(whitespace)
+      let ifv = (L("if") * prop).node(_TIf).hide(whitespace)
 
-      let stmt = ifnotempty / if' / loop / end' / expr
+      let stmt = ifnotempty / ifv / loop / endv / expr
       stmt
     end
 
@@ -81,7 +81,7 @@ primitive _StmtParser
     match result
     | let ast: ASTChild =>
       match ast.label()
-      | let if': _TIf => _parse_if(ast as AST)?
+      | let ifv: _TIf => _parse_if(ast as AST)?
       | let ifnotempty: _TIfNotEmpty => _parse_ifnotempty(ast as AST)?
       | let _: _TEnd => _EndNode
       | let call: _TCall => _parse_call(ast as AST)?
